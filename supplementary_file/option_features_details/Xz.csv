@@ -1,0 +1,13 @@
+Option,Primary Category,Subcategory,Descriptions,Symbol
+MemoryLimit,Resource-related,Memory,"Set memory usage limit for compression, decompression",R3
+Nice,Functional-related,Core,"Sets the ""nice length"" for LZMA, controlling the lower bound of the match length in the matching algorithm, affecting compression speed and efficiency.  ",F1
+Depth,Functional-related,Core,"Sets the compression depth for LZMA, controlling the search depth of the compression algorithm (e.g., hash chain or binary tree depth).  ",F1
+Dict,Resource-related,Memory,"Sets the dictionary size for LZMA, determining the range of historical data referenced during compression (larger size improves compression ratio but increases memory usage).  ",R3
+Dist,Functional-related,Core,"Sets the distance value for the Delta filter, specifying the offset for comparing adjacent bytes (used in Delta encoding preprocessing).  ",F1
+Multithreading,Resource-related,CPU,"Multithreading can make liblzma to consume input and produce output in a very bursty way: it may first read a lot of input to fill internal buffers, then no input or output occurs for a while.",R1
+BlockSize,Resource-related,Memory,"The encoder will start a new .xz Block every block_size bytes. With LZMA2, a recommended block size is 2-4 times the LZMA2 dictionary size. With very small dictionaries, it is recommended to use at least 1 MiB block size for good compression ratio, even if this is more than four times the dictionary size.",R3
+FlushTimeout,Resource-related,Queue,"when compressing, if more than TIMEOUT milliseconds has passed since the previous flush and reading more input would block, all pending data is flushed out.",R4
+PositionBits (pb),Functional-related,Core,"Sets the position bits for LZMA, affecting the precision of position encoding during compression (range 0-4).  ",F1
+check,Functional-related,Utility,"It is used to specify the integrity check type used during compression or decompression. Supported check types include none (no check), crc32, crc64, and sha256, to ensure data integrity. If the specified check type is not supported, the program will report an error and terminate.",F2
+mfs,Functional-related,Core,"Sets the match finder algorithm for LZMA (e.g., `hc3`, `bt4`, etc.), affecting compression speed and efficiency.  ",F1
+Literal Context (lc),Functional-related,Core,"Sets the literal context bits for LZMA, controlling the complexity of the context model (range 0-4).",F1

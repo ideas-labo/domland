@@ -1,0 +1,27 @@
+System,Workload,Algorithm,Score,Label
+xz,ambivert.wav.tar,Transfer-GA,3.773 (0.955),1
+xz,ambivert.wav.tar,Vanilla-GA,4.732 (1.299),1
+xz,artificl.tar,Transfer-GA,0.011 (0.003),1
+xz,artificl.tar,Vanilla-GA,0.014 (0.005),1
+xz,deepfield.tar,Transfer-GA,4.014 (1.188),1
+xz,deepfield.tar,Vanilla-GA,4.857 (1.347),1
+xz,enwik8.tar,Transfer-GA,11.096 (3.137),1
+xz,enwik8.tar,Vanilla-GA,14.333 (4.261),1
+xz,fannie_mae_500k.tar,Transfer-GA,11.596 (3.487),0
+xz,fannie_mae_500k.tar,Vanilla-GA,12.438 (3.627),0
+xz,large.tar,Transfer-GA,1.610 (0.458),1
+xz,large.tar,Vanilla-GA,1.959 (0.585),1
+xz,misc.tar,Transfer-GA,0.199 (0.014),0
+xz,misc.tar,Vanilla-GA,0.206 (0.017),0
+xz,silesia.tar,Transfer-GA,23.830 (6.797),1
+xz,silesia.tar,Vanilla-GA,30.210 (8.771),1
+xz,uiq-32.bin,Transfer-GA,21.255 (5.355),0
+xz,uiq-32.bin,Vanilla-GA,22.277 (6.795),0
+xz,uiq2-16.bin,Transfer-GA,10.306 (2.266),1
+xz,uiq2-16.bin,Vanilla-GA,13.123 (4.756),1
+xz,uiq2-4.bin,Transfer-GA,2.825 (0.687),0
+xz,uiq2-4.bin,Vanilla-GA,3.202 (0.880),0
+xz,uiq2-8.bin,Transfer-GA,5.653 (1.647),1
+xz,uiq2-8.bin,Vanilla-GA,7.278 (1.908),1
+xz,vmlinux-5.10.tar,Transfer-GA,2.947 (0.822),1
+xz,vmlinux-5.10.tar,Vanilla-GA,3.432 (0.927),1

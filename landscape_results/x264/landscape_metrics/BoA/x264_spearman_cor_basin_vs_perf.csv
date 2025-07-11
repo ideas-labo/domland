@@ -1,0 +1,10 @@
+Workload,Spearman_Correlation
+Johnny_1280x720_60_short,0.4925366943568558
+Netflix_Crosswalk_4096x2160_60fps_10bit_420_short,0.398965892110477
+blue_sky_1080p25_short,0.45559479969086364
+pedestrian_area_1080p25_short,0.4052067610218704
+riverbed_1080p25_short,0.36204900023087805
+sd_bridge_close_cif_short,0.6657715467581288
+sd_city_4cif_short,0.5630732405890666
+sd_crew_cif_short,0.6092648593539832
+sintel_trailer_2k_720p24_short,0.5488427908545486

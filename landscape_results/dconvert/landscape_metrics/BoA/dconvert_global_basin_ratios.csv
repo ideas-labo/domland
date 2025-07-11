@@ -1,0 +1,13 @@
+system,workload,num_global_optima,global_optimum_perfs,total_basin_size,global_basin_ratio
+dconvert,jpeg-large,1,1.76,537,0.07939089296274394
+dconvert,jpeg-medium,1,1.06,722,0.10674157303370786
+dconvert,jpeg-small,3,0.36,342,0.05056179775280899
+dconvert,png-large,1,1.55,726,0.10733293908929628
+dconvert,png-medium,3,0.48,987,0.14591957421643997
+dconvert,png-small,5,0.36,573,0.08471318746303962
+dconvert,psd-large,3,16.13,2760,0.4080425783560024
+dconvert,psd-medium,3,0.98,925,0.13675340035481964
+dconvert,psd-small,2,0.45,449,0.06638083973979894
+dconvert,svg-large,3,1.41,217,0.0320816085156712
+dconvert,svg-medium,1,1.4,243,0.035925487876995864
+dconvert,svg-small,6,0.47,781,0.1154642223536369

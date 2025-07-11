@@ -1,0 +1,10 @@
+system,workload,num_global_optima,global_optimum_perfs,total_basin_size,global_basin_ratio
+kanzi,ambivert,1,0.48,1439,0.34995136186770426
+kanzi,artificl,11,0.11,984,0.23929961089494164
+kanzi,deepfield,44,0.21,334,0.08122568093385214
+kanzi,enwik8,2,0.61,1238,0.3010700389105058
+kanzi,fannie_mae_500k,1,0.5,1360,0.33073929961089493
+kanzi,large,1,0.21,452,0.10992217898832685
+kanzi,misc,1,0.12,929,0.22592412451361868
+kanzi,silesia,1,1.07,1095,0.26629377431906615
+kanzi,vmlinux,1,0.35,700,0.17023346303501946

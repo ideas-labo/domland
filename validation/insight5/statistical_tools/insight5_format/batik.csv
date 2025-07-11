@@ -1,0 +1,23 @@
+System,Workload,Algorithm,Score,Label
+batik,corona,Transfer-GA,0.903 (0.009),1
+batik,corona,Vanilla-GA,0.924 (0.019),1
+batik,cranium,Transfer-GA,1.334 (0.006),1
+batik,cranium,Vanilla-GA,1.360 (0.021),1
+batik,cubus,Transfer-GA,4.177 (0.020),1
+batik,cubus,Vanilla-GA,4.254 (0.089),1
+batik,flame,Transfer-GA,1.186 (0.020),1
+batik,flame,Vanilla-GA,1.214 (0.019),1
+batik,france,Transfer-GA,2.393 (0.008),1
+batik,france,Vanilla-GA,2.460 (0.061),1
+batik,frisco,Transfer-GA,3.145 (0.042),1
+batik,frisco,Vanilla-GA,3.242 (0.076),1
+batik,jelly,Transfer-GA,1.135 (0.014),1
+batik,jelly,Vanilla-GA,1.149 (0.016),1
+batik,karte,Transfer-GA,7.065 (0.041),1
+batik,karte,Vanilla-GA,7.105 (0.062),1
+batik,mandelbrot,Transfer-GA,1.046 (0.009),1
+batik,mandelbrot,Vanilla-GA,1.062 (0.017),1
+batik,strawberry,Transfer-GA,1.112 (0.006),1
+batik,strawberry,Vanilla-GA,1.127 (0.019),1
+batik,village,Transfer-GA,1.619 (0.025),1
+batik,village,Vanilla-GA,1.668 (0.035),1

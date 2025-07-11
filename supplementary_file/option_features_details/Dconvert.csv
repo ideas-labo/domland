@@ -1,0 +1,11 @@
+Option,Primary Category,Subcategory,Descriptions,Symbol
+iosCreateImagesetFolders,Functional-related,Core,"iOS-specific: Generates `.imageset` folders and `Content.json` files for each image, placed directly in the root directory by default.",F1
+androidMipmapInsteadOfDrawable,Functional-related,Core,Uses the `mipmap` folder instead of the `drawable` folder for Android resource generation.  ,F1
+scaleIsHeightDp,Functional-related,Utility,Interprets the `-scale` parameter as a fixed height (in dp units) instead of the default width.  ,F2
+antiAliasing,Functional-related,Core,"Enables anti-aliasing to smooth image edges, particularly useful for small-sized images.  ",F1
+skipUpscaling,Functional-related,Core,"Restricts image resizing to downscaling only, preventing upscaling to avoid quality loss.  ",F1
+androidIncludeLdpiTvdpi,Functional-related,Core,Includes additional resource folders for `ldpi` and `tvdpi` densities in Android resource generation.  ,F1
+threads,Resource-related,CPU,"Configures the maximum number of parallel threads for processing, with a default of 4 threads (range: 1-8).  ",R1
+outputCompressionMode,Functional-related,Utility,"Specifies the compression format for output files, supporting GIF, JPEG, and PNG formats (with specific features for each).  ",F2
+roundingStrategy,Functional-related,Utility,"Defines the rounding mode for scaling operations, supporting floor, ceil, and round (default) methods.  ",F2
+platform,Functional-related,Utility,"Determines the target platform for resource generation, supporting Android, iOS, Web, and Windows with platform-specific folder structures and file naming conventions.  ",F2

@@ -1,0 +1,17 @@
+System,Workload,Algorithm,Score,Label
+h2,smallbank-1,Transfer-GA,26336.284 (1348.381),1
+h2,smallbank-1,Vanilla-GA,25721.608 (816.896),1
+h2,smallbank-10,Transfer-GA,18266.502 (1838.219),-1
+h2,smallbank-10,Vanilla-GA,18378.785 (822.054),-1
+h2,tpcc-2,Transfer-GA,932.575 (51.553),1
+h2,tpcc-2,Vanilla-GA,878.662 (63.803),1
+h2,tpcc-8,Transfer-GA,984.067 (141.645),1
+h2,tpcc-8,Vanilla-GA,934.248 (131.108),1
+h2,voter-16,Transfer-GA,46953.445 (4509.310),-1
+h2,voter-16,Vanilla-GA,47123.373 (2904.705),-1
+h2,voter-2,Transfer-GA,47071.542 (4573.392),-1
+h2,voter-2,Vanilla-GA,47652.393 (822.434),-1
+h2,ycsb-2400,Transfer-GA,19787.726 (1770.222),1
+h2,ycsb-2400,Vanilla-GA,18676.683 (2001.725),1
+h2,ycsb-600,Transfer-GA,27809.413 (1992.050),1
+h2,ycsb-600,Vanilla-GA,25719.406 (2141.486),1

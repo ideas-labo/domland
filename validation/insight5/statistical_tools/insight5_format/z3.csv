@@ -1,0 +1,25 @@
+System,Workload,Algorithm,Score,Label
+z3,AUFNIRA_z3.637557.smt2,Transfer-GA,5.860 (0.016),0
+z3,AUFNIRA_z3.637557.smt2,Vanilla-GA,5.907 (0.226),0
+z3,LRA_formula_277.smt2,Transfer-GA,2.333 (0.656),-1
+z3,LRA_formula_277.smt2,Vanilla-GA,1.761 (0.004),-1
+z3,QF_AUFBV_891_sqlite3.smt2,Transfer-GA,0.402 (0.695),0
+z3,QF_AUFBV_891_sqlite3.smt2,Vanilla-GA,0.573 (0.905),0
+z3,QF_AUFLIA_swap_t1_pp_nf_ai_00010_002.cvc.smt2,Transfer-GA,2.428 (0.247),0
+z3,QF_AUFLIA_swap_t1_pp_nf_ai_00010_002.cvc.smt2,Vanilla-GA,2.376 (0.332),0
+z3,QF_BV_bench_3176.smt2,Transfer-GA,3.378 (0.876),-1
+z3,QF_BV_bench_3176.smt2,Vanilla-GA,3.299 (0.275),-1
+z3,QF_BV_bench_935.smt2,Transfer-GA,1.324 (0.131),1
+z3,QF_BV_bench_935.smt2,Vanilla-GA,1.370 (0.190),1
+z3,QF_LIA_tightrhombus,Transfer-GA,0.319 (0.401),0
+z3,QF_LIA_tightrhombus,Vanilla-GA,0.343 (0.306),0
+z3,QF_LRA_clocksynchro_7clocks.worst_case_skew.induct.smt2,Transfer-GA,8.747 (0.005),0
+z3,QF_LRA_clocksynchro_7clocks.worst_case_skew.induct.smt2,Vanilla-GA,8.748 (0.004),0
+z3,QF_NRA_hong_9.smt2,Transfer-GA,3.182 (0.004),1
+z3,QF_NRA_hong_9.smt2,Vanilla-GA,3.185 (0.005),1
+z3,QF_RDL_orb08_888.smt2,Transfer-GA,6.838 (0.246),0
+z3,QF_RDL_orb08_888.smt2,Vanilla-GA,6.803 (0.251),0
+z3,QF_UFLIA_xs_23_43.smt2,Transfer-GA,8.240 (0.870),0
+z3,QF_UFLIA_xs_23_43.smt2,Vanilla-GA,8.121 (0.730),0
+z3,QF_UF_PEQ018_size6.smt2,Transfer-GA,3.899 (0.088),0
+z3,QF_UF_PEQ018_size6.smt2,Vanilla-GA,3.936 (0.262),0

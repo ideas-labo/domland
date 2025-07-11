@@ -1,0 +1,8 @@
+Option,Primary Category,Subcategory,Descriptions,Symbol
+encryption,Functional-related,Utility,Encrypt sensitive data,F2
+integrityCheck,Functional-related,Utility,Ensure integrity of decompressed data,F2
+nice,Resource-related,Storage,Friendly to background tasks,R2
+multithreading,Resource-related,CPU,Accelerate compression/decompression,R1
+unlimitedWindowSize,Functional-related,Core,"Handle large files, pursue maximum compression ratio",F1
+disableLzoCompressibilityTesting,Functional-related,Core,Force compression of all data,F1
+compat,Resource-related,CPU,Balance compression ratio and speed,R1

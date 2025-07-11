@@ -1,0 +1,7 @@
+system,workload,num_global_optima,global_optimum_perfs,total_basin_size,global_basin_ratio
+jump3r,beethoven,1,1.96,155,0.036939942802669205
+jump3r,dual-channel,1,0.59,341,0.08126787416587226
+jump3r,helix,1,0.88,312,0.07435653002859867
+jump3r,single-channel,9,0.55,457,0.10891325071496663
+jump3r,speech,2,0.82,425,0.10128693994280268
+jump3r,sweep,1,0.27,134,0.03193517635843661

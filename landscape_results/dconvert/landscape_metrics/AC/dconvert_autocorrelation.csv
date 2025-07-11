@@ -1,0 +1,13 @@
+system,workload,autocorrelation
+dconvert,jpeg-large,0.7814521420485323
+dconvert,jpeg-medium,0.7789950621356887
+dconvert,jpeg-small,0.4413743698825378
+dconvert,png-large,0.7722348453115231
+dconvert,png-medium,0.7535351810033627
+dconvert,png-small,0.5905011347251943
+dconvert,psd-large,0.8922667028761943
+dconvert,psd-medium,0.7674051410646452
+dconvert,psd-small,0.5568503786468695
+dconvert,svg-large,0.005296882229896811
+dconvert,svg-medium,0.3218240180559003
+dconvert,svg-small,0.6720442783266809

@@ -1,0 +1,10 @@
+system,workload,num_global_optima,global_optimum_perfs,total_basin_size,global_basin_ratio
+x264,Johnny_1280x720_60_short,1,0.69,161,0.051718599421779636
+x264,Netflix_Crosswalk_4096x2160_60fps_10bit_420_short,1,2.86,11,0.0035335689045936395
+x264,blue_sky_1080p25_short,1,1.03,11,0.0035335689045936395
+x264,pedestrian_area_1080p25_short,2,1.31,41,0.013170575008030838
+x264,riverbed_1080p25_short,2,2.73,62,0.019916479280436876
+x264,sd_bridge_close_cif_short,3,0.07,10,0.0032123353678123997
+x264,sd_city_4cif_short,1,0.45,105,0.033729521362030196
+x264,sd_crew_cif_short,11,0.11,641,0.2059106970767748
+x264,sintel_trailer_2k_720p24_short,3,0.19,15,0.004818503051718599

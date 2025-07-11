@@ -1,0 +1,26 @@
+Option,RSD (%)
+slow-firstpass,1.162
+no-scenecut,6.467
+intra-refresh,11.448
+open-gop,8.785
+no-cabac,13.159
+no-deblock,10.602
+tff,7.546
+bff,9.864
+constrained-intra,1.393
+no-fast-pskip,15.910
+no-8x8dct,1.717
+no-chroma-me,0.168
+no-mixed-refs,3.630
+no-psy,0.196
+no-weightb,5.904
+no-mbtree,12.122
+no-dct-decimate,10.031
+pic-struct,11.830
+non-deterministic,1.692
+cpu-independent,4.996
+no-asm,19.874
+aud,15.940
+dts-compress,6.854
+opencl,0.671
+sliced-threads,5.520

@@ -1,0 +1,14 @@
+Option,Primary Category,Subcategory,Descriptions,Symbol
+NoRes,Functional-related,Core,"Disables the bit reservoir, limiting bit sharing between frames to improve compatibility (may sacrifice encoding efficiency).  ",F1
+NoReplayGain,Functional-related,Core,"Disables ReplayGain analysis, skipping the calculation of audio loudness normalization parameters.  ",F1
+Downmix,Functional-related,Core,Mixes stereo input into mono output (achieved via the -a parameter).  ,F1
+ReplayGainFast,Functional-related,Core,Enables fast but less precise ReplayGain calculation (default mode).  ,F1
+Freeformat,Functional-related,Core,"Generates free-format bitstream (--freeformat), allowing custom bitrates (8-640 kbps), requires -b for configuration.  ",F1
+Stereo,Functional-related,Core,Standard stereo encoding mode (via -m s).  ,F1
+CRC,Functional-related,Utility,"Adds CRC error checking (via -p), enhances file error tolerance but occupies encoding bits.  ",F2
+SwapBytes,Functional-related,Utility,"Swaps the byte order of input/output files (via -x), resolves big-endian/little-endian compatibility issues.  ",F2
+ReplayGainAccurate,Resource-related,CPU,"Accurately calculates ReplayGain (via --replaygain-accurate), based on decoded audio data, and records peak sample values.  ",R1
+Resampling,Resource-related,CPU,"Sets the output sample rate (via --resample), e.g., --resample 44.1 forces output to 44.1 kHz.  ",R1
+CBR,Resource-related,Storage,"Constant bitrate encoding (via -b to specify a fixed bitrate, e.g., -b 128 for 128 kbps).  ",R2
+VBRRange,Resource-related,Storage,"Variable bitrate range control (via --vbr-old/--vbr-new to select the algorithm, -V to set quality level, -b/-B to limit bitrate).",R2
+MPEGMode,Functional-related,Core,Encodes mode.  ,F1

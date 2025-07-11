@@ -1,0 +1,19 @@
+System,Workload,Algorithm,Score,Label
+kanzi,ambivert,Transfer-GA,1.129 (1.529),1
+kanzi,ambivert,Vanilla-GA,1.832 (1.368),1
+kanzi,artificl,Transfer-GA,0.133 (0.048),1
+kanzi,artificl,Vanilla-GA,0.160 (0.044),1
+kanzi,deepfield,Transfer-GA,0.427 (0.311),-1
+kanzi,deepfield,Vanilla-GA,0.281 (0.066),-1
+kanzi,enwik8,Transfer-GA,2.020 (4.084),1
+kanzi,enwik8,Vanilla-GA,2.207 (1.423),1
+kanzi,fannie_mae_500k,Transfer-GA,1.116 (1.692),1
+kanzi,fannie_mae_500k,Vanilla-GA,1.539 (0.982),1
+kanzi,large,Transfer-GA,0.446 (0.396),1
+kanzi,large,Vanilla-GA,0.548 (0.328),1
+kanzi,misc,Transfer-GA,0.173 (0.101),1
+kanzi,misc,Vanilla-GA,0.241 (0.131),1
+kanzi,silesia,Transfer-GA,3.448 (7.086),1
+kanzi,silesia,Vanilla-GA,4.937 (4.133),1
+kanzi,vmlinux,Transfer-GA,0.780 (1.248),1
+kanzi,vmlinux,Vanilla-GA,1.205 (0.951),1

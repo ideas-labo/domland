@@ -1,0 +1,26 @@
+Option,Primary Category,Subcategory,Descriptions,Symbol
+slow-firstpass,Functional-related,Core,High-precision first-pass encoding.  ,F1
+no-scenecut,Functional-related,Core,Fixed GOP structure.  ,F1
+intra-refresh,Functional-related,Core,Low-latency real-time streaming.  ,F1
+open-gop,Functional-related,Core,Improved compression rate.  ,F1
+no-cabac,Functional-related,Core,Decoding for low-end devices.  ,F1
+no-deblock,Functional-related,Core,Benchmarking/speed priority.  ,F1
+tff,Functional-related,Core,Interlaced video source processing.  ,F1
+bff,Functional-related,Core,Interlaced video source processing.  ,F1
+constrained-intra,Functional-related,Core,SVC layered encoding (deprecated).  ,F1
+no-fast-pskip,Functional-related,Core,Extreme quality requirements.  ,F1
+no-8x8dct,Functional-related,Core,Compatibility with older devices.  ,F1
+no-chroma-me,Resource-related,CPU,Speed priority.  ,R1
+no-mixed-refs,Functional-related,Core,Simplified reference mode.  ,F1
+no-psy,Functional-related,Core,Focus on PSNR metrics.  ,F1
+no-weightb,Functional-related,Core,Simplified encoding process.  ,F1
+no-mbtree,Resource-related,Storage,Memory saving/speed improvement.  ,R2
+no-dct-decimate,Functional-related,Core,Need to retain details.  ,F1
+pic-struct,Functional-related,Core,Broadcast-level production standards.  ,F1
+non-deterministic,Resource-related,CPU,Pursuit of extreme compression rate.  ,R1
+cpu-independent,Resource-related,CPU,Cross-platform compatibility requirements.  ,R1
+no-asm,Resource-related,CPU,Debugging/compatibility issue troubleshooting.  ,R1
+aud,Functional-related,Core,Blu-ray encoding standards.  ,F1
+dts-compress,Functional-related,Core,Specific streaming server requirements.  ,F1
+opencl,Resource-related,CPU,GPU acceleration scenarios.  ,R1
+sliced-threads,Resource-related,CPU,Real-time low-latency encoding.,R1

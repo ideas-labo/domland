@@ -1,0 +1,17 @@
+Option,Primary Category,Subcategory,Descriptions,Symbol
+OPTIMIZE_IN_SELECT,Resource-related,CPU,"Optimizes IN(SELECT ...) comparisons (applicable to SELECT, DELETE, UPDATE).  ",R1
+OPTIMIZE_INSERT_FROM_SELECT,Resource-related,CPU,Directly bypasses temporary disk storage for insert operations (applicable to INSERT INTO ... SELECT and CREATE TABLE AS SELECT).  ,R1
+OPTIMIZE_TWO_EQUALS,Resource-related,CPU,Optimizes conditions like A=B AND B=1 by adding AND A=1 to enable index usage.  ,R1
+OPTIMIZE_IN_LIST,Resource-related,CPU,"Optimizes IN(...) and IN(SELECT ...) comparisons (applicable to SELECT, DELETE, UPDATE).  ",R1
+OPTIMIZE_EVALUATABLE_SUBQUERIES,Resource-related,CPU,Optimizes subqueries that do not depend on the outer query.  ,R1
+PAGE_STORE_TRIM,Resource-related,CPU,Trims file size when closing the database.  ,R1
+RECOMPILE_ALWAYS,Functional-related,Core,Always recompiles prepared statements.  ,F1
+COMPRESS,Resource-related,Storage,Compresses data during storage.  ,R2
+IGNORE_CATALOGS,Functional-related,Utility,Ignores catalog names in identifiers and does not check for matching database short names.  ,F2
+OPTIMIZE_OR,Resource-related,CPU,"Converts (C=? OR C=?) to C IN(?, ?).  ",R1
+PAGE_STORE_INTERNAL_COUNT,Functional-related,Core,Updates row count statistics at the node level (for the PageStore engine).  ,F1
+REUSE_SPACE,Resource-related,Storage,"Allows reusing space within the database file (otherwise, all changes are appended to the end of the file).  ",R2
+DROP_RESTRICT,Functional-related,Utility,"Executes DROP operations using RESTRICT mode by default (e.g., DROP TABLE).  ",F2
+DEFRAG_ALWAYS,Resource-related,Storage,Performs full defragmentation during normal database shutdown (equivalent to SHUTDOWN DEFRAG).  ,R2
+OPTIMIZE_DISTINCT,Resource-related,CPU,Optimizes performance for simple DISTINCT queries (requires index and selectivity conditions).  ,R1
+MVSTORE,Functional-related,Core,Uses the MVStore storage engine (actual configuration name in code is MV_STORE).,F1

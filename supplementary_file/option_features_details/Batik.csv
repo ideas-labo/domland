@@ -1,0 +1,9 @@
+Option,Primary Category,Subcategory,Descriptions,Symbol
+anyScriptOrigin,Functional-related,Utility,Allows loading scripts from any location (default only allows loading from the same origin as the document).  ,F2
+validate,Functional-related,Utility,Validates whether the input SVG file complies with the DTD.  ,F2
+onload,Functional-related,Core,"Performs rasterization after the SVG load event is triggered (e.g., for handling dynamic scripts or animations).  ",F1
+dpi,Functional-related,Utility,"Sets the output resolution (dots per inch), affecting the conversion of pixels to millimeters.  ",F2
+resolution,Functional-related,Utility,The actual functionality is implemented through the dpi parameter.,F2
+quality,Functional-related,Utility,"Sets the JPEG image quality (range: 0.0-1.0, higher values indicate better quality).  ",F2
+indexed,Functional-related,Utility,"Generates PNGs using indexed color mode, specifying the color bit depth (1, 2, 4, or 8 bits).  ",F2
+mimeType,Functional-related,Utility,Outputs format.  ,F2

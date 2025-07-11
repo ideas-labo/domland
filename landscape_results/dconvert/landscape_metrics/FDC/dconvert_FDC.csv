@@ -1,0 +1,13 @@
+system,workload,FDC
+dconvert,jpeg-large,0.46127901847005753
+dconvert,jpeg-medium,0.5241625120685884
+dconvert,jpeg-small,0.46765219803936803
+dconvert,png-large,0.5109592923184675
+dconvert,png-medium,0.5229776095287126
+dconvert,png-small,0.5244832945014484
+dconvert,psd-large,0.5124407809738885
+dconvert,psd-medium,0.2318092244514504
+dconvert,psd-small,0.470873674038403
+dconvert,svg-large,-0.005475437150135945
+dconvert,svg-medium,0.29225457160251944
+dconvert,svg-small,0.34546136887292966

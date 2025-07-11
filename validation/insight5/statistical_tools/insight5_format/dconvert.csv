@@ -1,0 +1,25 @@
+System,Workload,Algorithm,Score,Label
+dconvert,jpeg-large,Transfer-GA,1.797 (0.009),1
+dconvert,jpeg-large,Vanilla-GA,1.860 (0.092),1
+dconvert,jpeg-medium,Transfer-GA,1.078 (0.040),1
+dconvert,jpeg-medium,Vanilla-GA,1.110 (0.040),1
+dconvert,jpeg-small,Transfer-GA,0.371 (0.003),1
+dconvert,jpeg-small,Vanilla-GA,0.377 (0.006),1
+dconvert,png-large,Transfer-GA,1.561 (0.003),1
+dconvert,png-large,Vanilla-GA,1.603 (0.048),1
+dconvert,png-medium,Transfer-GA,0.489 (0.005),1
+dconvert,png-medium,Vanilla-GA,0.504 (0.014),1
+dconvert,png-small,Transfer-GA,0.365 (0.008),1
+dconvert,png-small,Vanilla-GA,0.382 (0.009),1
+dconvert,psd-large,Transfer-GA,16.148 (0.022),1
+dconvert,psd-large,Vanilla-GA,16.475 (1.411),1
+dconvert,psd-medium,Transfer-GA,1.013 (0.007),1
+dconvert,psd-medium,Vanilla-GA,1.034 (0.025),1
+dconvert,psd-small,Transfer-GA,0.462 (0.013),1
+dconvert,psd-small,Vanilla-GA,0.477 (0.016),1
+dconvert,svg-large,Transfer-GA,1.435 (0.008),0
+dconvert,svg-large,Vanilla-GA,1.437 (0.008),0
+dconvert,svg-medium,Transfer-GA,1.429 (0.014),1
+dconvert,svg-medium,Vanilla-GA,1.448 (0.020),1
+dconvert,svg-small,Transfer-GA,0.480 (0.004),0
+dconvert,svg-small,Vanilla-GA,0.481 (0.007),0

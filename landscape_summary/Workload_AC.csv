@@ -1,0 +1,13 @@
+workload(Type-Scale),Autocorrelation,workload(Type-Scale),Autocorrelation
+jpeg-large,0.781 ,smallbank-1,0.779 
+jpeg-medium,0.779 ,smallbank-10,0.828 
+jpeg-small,0.441 ,tpcc-2,0.770 
+png-large,0.772 ,tpcc-8,0.129 
+png-medium,0.754 ,voter-16,0.807 
+png-small,0.591 ,voter-2,0.803 
+psd-large,0.892 ,ycsb-2400,0.608 
+psd-medium,0.767 ,ycsb-600,0.687 
+psd-small,0.557 ,N/A,N/A
+svg-large,0.005 ,N/A,N/A
+svg-medium,0.322 ,N/A,N/A
+svg-small,0.672 ,N/A,N/A

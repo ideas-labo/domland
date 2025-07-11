@@ -1,0 +1,19 @@
+Option,Primary Category,Subcategory,Descriptions,Symbol
+LZP,Functional-related,Core,"Help information mentions LZP as part of transformations, possibly used in LZ-type compression.  ",F1
+ROLZX,Functional-related,Core,"Transformation options include ROLZX, an extended version of ROLZ.  ",F1
+RANK,Functional-related,Core,"Transformation options mention RANK, possibly used for data arrangement.  ",F1
+TEXT,Functional-related,Core,"Help information mentions TEXT as part of transformations, used for preprocessing text data.  ",F1
+skip,Functional-related,Core,The -s or --skip option in the code is used to skip compression of high-entropy blocks.  ,F1
+BWTS,Functional-related,Core,"Transformation includes BWTS, possibly an improved version of BWT.  ",F1
+LZ,Functional-related,Core,"Help information mentions LZ as part of transformations, a basic LZ compression.  ",F1
+MTFT,Functional-related,Core,"Transformation includes MTFT, possibly an improved Move-To-Front transform.  ",F1
+SRT,Functional-related,Core,"Transformation includes SRT, possibly used for sorting or conversion.  ",F1
+X86,Functional-related,Core,"Transformation includes X86, preprocessing for x86 binary code.  ",F1
+checksum,Functional-related,Utility,The -x or --checksum option enables block checksums.  ,F2
+RLT,Functional-related,Core,"Transformation includes RLT, Run-Length Transform.  ",F1
+BWT,Functional-related,Core,"Transformation includes BWT, Burrows-Wheeler Transform.  ",F1
+ZRLT,Functional-related,Core,"Transformation includes ZRLT, Zero Run-Length Transform.  ",F1
+ROLZ,Functional-related,Core,"Transformation includes ROLZ, a variant of LZ.  ",F1
+jobs,Resource-related,CPU,The -j or --jobs option sets the number of concurrent tasks.  ,R1
+blocksize,Resource-related,Memory,The -b or --block option sets the block size.,R3
+entropyType,Functional-related,Core,"Entropy encoding options include TPAQ, a type of model predictive encoding.  ",F1

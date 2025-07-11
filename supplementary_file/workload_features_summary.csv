@@ -1,0 +1,15 @@
+,,Lrzip,,,Xz,,,Z3,,,Dconvert,,,Batik,,,Kanzi,,,X264,,,H2,,,Jump3r,
+Wrokload,Name,Type,Scale,Name,Type,Scale,Name,Type,Scale,Name,Type,Scale,Name,Type,Scale,Name,Type,Scale,Name,Type,Scale,Name,Type,Scale,Name,Type,Scale
+W1,ambivert,tar,small,ambivert,tar,small,AUFNIRA_z3,smt2,scale,jpeg-large,jpeg,large,corona,svg,medium,ambivert,tar,small,Johnny_1280x720_60_short,vedio/y4m,scale,smallbank-1,smallbank,1,beethoven,WAVE,medium
+W2,artificl,tar,small,artificl,tar,small,LRA_formula_277,smt2,scale,jpeg-medium,jpeg,medium,cranium,svg,medium,artificl,tar,small,Netflix_Crosswalk_4096x2160_60fps_10bit_420_short,vedio/y4m,scale,smallbank-10,smallbank,10,dual-channel,scale,scale
+W3,deepfield,tar,large,deepfield,tar,large,QF_AUFBV_891_sqlite3,smt2,scale,jpeg-small,jpeg,small,cubus,svg,small,deepfield,tar,large,blue_sky_1080p25_short,vedio/y4m,scale,tpcc-2,tpcc,2,helix,WAVE,large
+W4,enwik8,tar,large,enwik8,tar,large,QF_AUFLIA_swap_t1_pp_nf_ai_00010_002,smt2,scale,png-large,png,large,flame,svg,large,enwik8,tar,large,pedestrian_area_1080p25_short,vedio/y4m,scale,tpcc-8,tpcc,8,single-channel,scale,scale
+W5,fannie_mae_500k,tar,medium,fannie_mae_500k,tar,medium,QF_BV_bench_3176,smt2,scale,png-medium,png,medium,france,svg,large,fannie_mae_500k,tar,medium,riverbed_1080p25_short,vedio/y4m,scale,voter-16,voter,16,speech,WAVE,small
+W6,large,tar,large,large,tar,large,QF_BV_bench_935,smt2,scale,png-small,png,small,frisco,svg,large,large,tar,large,sd_bridge_close_cif_short,vedio/y4m,scale,voter-2,voter,2,sweep,scale,scale
+W7,misc,tar,medium,misc,tar,medium,QF_LIA_tightrhombus,smt2,scale,psd-large,psd,large,jelly,svg,medium,misc,tar,medium,sd_city_4cif_short,vedio/y4m,scale,ycsb-2400,ycsb,2400,N/A,N/A,N/A
+W8,silesia,tar,large,silesia,tar,large,QF_LRA_clocksynchro_7clocks,smt2,scale,psd-medium,psd,medium,karte,svg,large,silesia,tar,large,sd_crew_cif_short,vedio/y4m,scale,ycsb-600,ycsb,600,N/A,N/A,N/A
+W9,uiq2-4,tar,scale,uiq2-4,tar,scale,QF_NRA_hong_9,smt2,scale,psd-small,psd,small,mandelbrot,svg,medium,vmlinux,scale,scale,sintel_trailer_2k_720p24_short,vedio/y4m,scale,N/A,N/A,N/A,N/A,N/A,N/A
+W10,uiq2-8,tar,scale,uiq2-8,tar,scale,QF_RDL_orb08_888,smt2,scale,svg-large,svg,large,strawberry,svg,small,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+W11,uiq2-16,tar,scale,uiq2-16,tar,scale,QF_UFLIA_xs_23_43,smt2,scale,svg-medium,svg,medium,village,svg,scale,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+W12,uiq-32,tar,scale,uiq-32,tar,scale,QF_UF_PEQ018_size6,smt2,scale,svg-small,svg,small,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A
+W13,vmlinux-5,tar,scale,vmlinux-5,tar,scale,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A

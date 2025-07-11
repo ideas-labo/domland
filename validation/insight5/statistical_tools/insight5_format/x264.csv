@@ -1,0 +1,19 @@
+System,Workload,Algorithm,Score,Label
+x264,Johnny_1280x720_60_short.y4m,Transfer-GA,0.929 (0.258),1
+x264,Johnny_1280x720_60_short.y4m,Vanilla-GA,1.097 (0.348),1
+x264,Netflix_Crosswalk_4096x2160_60fps_10bit_420_short.y4m,Transfer-GA,3.778 (1.110),0
+x264,Netflix_Crosswalk_4096x2160_60fps_10bit_420_short.y4m,Vanilla-GA,4.005 (1.024),0
+x264,blue_sky_1080p25_short.y4m,Transfer-GA,1.322 (0.300),0
+x264,blue_sky_1080p25_short.y4m,Vanilla-GA,1.449 (0.375),0
+x264,pedestrian_area_1080p25_short.y4m,Transfer-GA,1.603 (0.412),1
+x264,pedestrian_area_1080p25_short.y4m,Vanilla-GA,1.886 (0.617),1
+x264,riverbed_1080p25_short.y4m,Transfer-GA,3.414 (0.834),0
+x264,riverbed_1080p25_short.y4m,Vanilla-GA,3.561 (0.774),0
+x264,sd_bridge_close_cif_short.y4m,Transfer-GA,0.102 (0.014),0
+x264,sd_bridge_close_cif_short.y4m,Vanilla-GA,0.110 (0.022),0
+x264,sd_city_4cif_short.y4m,Transfer-GA,0.595 (0.150),1
+x264,sd_city_4cif_short.y4m,Vanilla-GA,0.651 (0.134),1
+x264,sd_crew_cif_short.y4m,Transfer-GA,0.141 (0.033),1
+x264,sd_crew_cif_short.y4m,Vanilla-GA,0.170 (0.043),1
+x264,sintel_trailer_2k_720p24_short.y4m,Transfer-GA,0.251 (0.041),0
+x264,sintel_trailer_2k_720p24_short.y4m,Vanilla-GA,0.263 (0.053),0

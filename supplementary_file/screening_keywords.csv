@@ -1,0 +1,6 @@
+Core (F1),"core logic, execution, algorithm, optimization,compression, decoding, matching, engine, debugging, solver"
+Utility (F2),"auxiliary functionality, compatibility, tools, error checking, encryption, logging, debugging, statistics, auto-configuration, formatting"
+CPU (R1),"threads, parallelism, computation, optimization, multitasking, scheduling, acceleration"
+Storage (R2),"storage, compression, disk, files, space management, persistence, partitioning"
+Memory (R3),"cache, memory pool, dictionary, buffer, data blocks, historical data"
+Queue (R4),"queuing, timeout, scheduling, waiting"
