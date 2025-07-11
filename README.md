@@ -1,3 +1,5 @@
+# Revealing Domain-Spatiality Patterns for Configuration Tuning: Domain Knowledge Meets Fitness Landscapes
+
 # 1 Documents
 
 ## 1.1 datasets
@@ -114,15 +116,17 @@ This supplementary data ensures transparency and reproducibility for the analysi
 ## 1.5 Validation
 The `validation/` directory contains the experimental results that validate the actionable insights proposed in Section 5.5 of our paper. This section evaluates how different landscape characteristics influence the performance of configuration tuning algorithms, based on the following five insights:
 
-# 2 Code Structure
-
-The repository contains several Python scripts that are used for analyzing configuration landscapes, computing metrics, and generating visualizations. Below is an overview of each script and its functionality.
-
 - `insight1/`: Validates that ruggedness-sensitive options impact tuning efficiency and prioritization can benefit tuning algorithm.
 - `insight234/`: Validates that landscape structure (e.g., smoothness, modality) affects the effectiveness of exploration-, exploitation-, and model-based tuners.
 - `insight5/`: Examines the transferability of configurations across workloads under different degrees of landscape stability.
 
 Each folder contains experimental data, evaluation scripts, and plotting functions used to support the corresponding insight in the paper.
+
+
+# 2 Code Structure
+
+The repository contains several Python scripts that are used for analyzing configuration landscapes, computing metrics, and generating visualizations. Below is an overview of each script and its functionality.
+
 
 ## 2.1 Main Python Files
 
