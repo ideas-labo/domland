@@ -7,13 +7,13 @@ The `dataset` folder contains configuration datasets for the following **9 subje
 
 | System   | Language | Domain          | Performance | Version      | Resource Intensity       | LOC     | #O  | #C   | #W  | Optimization Goal |
 |----------|---------|------------------|-------------|--------------|--------------------------|---------|----|-------|-----|-------------------|
-| JUMP3R   | Java    | Audio Encoder    | Runtime     | 1.0.4        | Computing                | 29,685  | 16 | 4,196 | 6   | Minimization      |
-| KANZI    | Java    | File Compressor  | Runtime     | 1.9          | I/O; Memory              | 28,614  | 24 | 4,112 | 9   | Minimization      |
-| DCONVERT | Java    | Image Scaling    | Runtime     | 1.0.0-α7     | I/O; Memory              | 6,888   | 18 | 6,764 | 12  | Minimization      |
+| JUMP3R   | Java    | Audio Encoder    | Runtime     | 1.0.4        | Computing                | 29,685  | 13 | 4,196 | 6   | Minimization      |
+| KANZI    | Java    | File Compressor  | Runtime     | 1.9          | I/O; Memory              | 28,614  | 18 | 4,112 | 9   | Minimization      |
+| DCONVERT | Java    | Image Scaling    | Runtime     | 1.0.0-α7     | I/O; Memory              | 6,888   | 10 | 6,764 | 12  | Minimization      |
 | H2       | Java    | Database         | Throughput  | 4.200        | I/O; Memory; Storage     | 333,539 | 16 | 1,954 | 8   | Maximization      |
-| BATLIK   | Java    | SVG Rasterizer   | Runtime     | 1.14         | Computing                | 360,924 | 10 | 1,919 | 11  | Minimization      |
-| XZ       | C/C++   | File Compressor  | Runtime     | 5.2.0        | Computing                | 43,130  | 33 | 1,999 | 13  | Minimization      |
-| LRZIP    | C/C++   | File Compressor  | Runtime     | 0.651        | Computing                | 20,797  | 11 | 190   | 13  | Minimization      |
+| BATLIK   | Java    | SVG Rasterizer   | Runtime     | 1.14         | Computing                | 360,924 | 8 | 1,919 | 11  | Minimization      |
+| XZ       | C/C++   | File Compressor  | Runtime     | 5.2.0        | Computing                | 43,130  | 12 | 1,999 | 13  | Minimization      |
+| LRZIP    | C/C++   | File Compressor  | Runtime     | 0.651        | Computing                | 20,797  | 7 | 190   | 13  | Minimization      |
 | X264     | C/C++   | Video Encoder    | Runtime     | baee400...   | Computing; I/O           | 86,740  | 25 | 3,113 | 9   | Minimization      |
 | Z3       | C/C++   | SMT Solver       | Runtime     | 4.8.14       | Computing                | 636,268 | 12 | 1,011 | 12  | Minimization      |
 
