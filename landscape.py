@@ -155,6 +155,40 @@ class Landscape:
 
         return local_optima_dict, hamming_distance_dict
 
+
+    def visualize_local_optima_distribution(self, save_dir='local_optima_distribution'):
+        os.makedirs(os.path.join(save_dir, self.system_name), exist_ok=True)
+
+        local_optima_dict, _ = self.calculate_local_optima()
+        for workload, optima_indices in local_optima_dict.items():
+            configs = pd.DataFrame(self.config_dict[workload])
+            performances = self.perf_dict[workload]
+
+            if self.system_name == 'h2':
+                global_opt_idx = np.where(performances == max(performances))[0]
+            else:
+                global_opt_idx = np.where(performances == min(performances))[0]
+
+            global_opts = configs.iloc[global_opt_idx].values
+            local_opts = configs.iloc[optima_indices].values
+            local_perf = np.array(performances)[optima_indices]
+
+            hamming_dists = []
+            for local in local_opts:
+                dists = [np.sum(local != global_opt) for global_opt in global_opts]
+                hamming_dists.append(min(dists))
+
+            plt.figure()
+            plt.scatter(hamming_dists, local_perf, alpha=0.7)
+            plt.xlabel("Hamming Distance to Global Optimum")
+            plt.ylabel("Performance (Fitness)")
+            plt.title(f"Local Optima Distribution - {workload}")
+            plt.grid(True)
+            plt.tight_layout()
+            file_path = os.path.join(save_dir, self.system_name, f"{workload}.pdf")
+            plt.savefig(file_path)
+            plt.close()
+
     def calculate_local_optima_quality(self, local_optima_dict):
         """
         Calculate the quality of the local optimal solutions for target system (of each workload).
