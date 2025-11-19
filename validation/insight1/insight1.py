@@ -10,11 +10,19 @@ RESULTS_DIR = Path("results")
 SAVE_DIR = Path("insight1_visualization")
 SUMMARY_DIR = SAVE_DIR / "aggregation"
 BUDGET = 1000
-SELECTED_ALGORITHMS = ["HC", "HC_option"]
+
+# SELECTED_ALGORITHMS = ["HC", "HC_option"]
+#
+# DISPLAY_NAMES = {
+#     "HC":        "Vanilla HC",
+#     "HC_option": "Priority HC",
+# }
+
+SELECTED_ALGORITHMS = ["GA", "GA_option"]
 
 DISPLAY_NAMES = {
-    "HC":        "Vanilla HC",
-    "HC_option": "Priority HC",
+    "GA":        "Vanilla GA",
+    "GA_option": "Priority GA",
 }
 
 
@@ -58,6 +66,8 @@ for algorithm in SELECTED_ALGORITHMS:
 
         for workload, y_opt in workloads.items():
             if algorithm == "GA":
+                prefix = f"{algorithm}_pop20_{system}_{workload}_i"
+            elif algorithm == "GA_option":
                 prefix = f"{algorithm}_pop20_{system}_{workload}_i"
             else:
                 prefix = f"{algorithm}_{system}_{workload}_i"

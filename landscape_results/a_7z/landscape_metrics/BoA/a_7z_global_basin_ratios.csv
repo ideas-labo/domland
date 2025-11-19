@@ -1,0 +1,5 @@
+system,workload,num_global_optima,global_optimum_perfs,total_basin_size,global_basin_ratio
+a_7z,7z,1,4196.4,10565,0.15391899766899766
+a_7z,7z_large,1,4196.4,718,0.02092074592074592
+a_7z,7z_medium,1,4196.4,138,0.008041958041958041
+a_7z,7z_small,1,4299.4,464,0.1351981351981352

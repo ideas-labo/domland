@@ -25,7 +25,7 @@ def process_regret(F, budget, _yopt, system):
 
 
 all_convergence_data = {}
-budget = 1000
+budget = 100
 
 
 for algorithm in os.listdir(RESULTS_DIR):
@@ -116,7 +116,7 @@ for system, workloads in optima.items():
                 continue
 
             mean_regret = all_convergence_data[algorithm][system][workload]["mean"]
-            all_regrets.append(mean_regret[0:1000])
+            all_regrets.append(mean_regret[0:100])
 
         if all_regrets:
             all_regrets = np.concatenate(all_regrets)
@@ -136,20 +136,20 @@ for system, workloads in optima.items():
             x = np.arange(len(mean_regret))
 
             if regret_max > regret_min:
-                regret_norm = (mean_regret[0:1000] - regret_min) / (regret_max - regret_min)
-                lower_norm = ((mean_regret[:1000] - std_regret[:1000]) - regret_min) / (regret_max - regret_min)
-                upper_norm = ((mean_regret[:1000] + std_regret[:1000]) - regret_min) / (regret_max - regret_min)
+                regret_norm = (mean_regret[0:100] - regret_min) / (regret_max - regret_min)
+                lower_norm = ((mean_regret[:100] - std_regret[:100]) - regret_min) / (regret_max - regret_min)
+                upper_norm = ((mean_regret[:100] + std_regret[:100]) - regret_min) / (regret_max - regret_min)
 
                 lower_norm = np.clip(lower_norm, 0.0, 1.0)
                 upper_norm = np.clip(upper_norm, 0.0, 1.0)
             else:
-                regret_norm = np.full_like(mean_regret[0:1000], 0.5)
+                regret_norm = np.full_like(mean_regret[0:100], 0.5)
                 lower_norm = upper_norm = regret_norm
 
 
-            plt.plot(x[0:1000], regret_norm, label=algorithm, color=color, linestyle=linestyle,
+            plt.plot(x[0:100], regret_norm, label=algorithm, color=color, linestyle=linestyle,
                      marker=marker, markersize=10, markevery=10)
-            plt.fill_between(x[:1000],
+            plt.fill_between(x[:100],
                              lower_norm,
                              upper_norm,
                              color=color,
@@ -160,7 +160,7 @@ for system, workloads in optima.items():
         plt.ylabel("Normalized Regret", fontsize=28)
         plt.legend(loc="upper right", frameon=False, ncol=1, fontsize=22)
 
-        plt.xlim(0, 103)
+        plt.xlim(0, 100) #103
         system_name = system.upper()
         plt.title(f'{system_name} (W{wl_idx})', fontsize=28)
         # plt.ylim(0, 0.5)

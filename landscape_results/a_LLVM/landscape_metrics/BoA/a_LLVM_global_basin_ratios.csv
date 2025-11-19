@@ -1,0 +1,5 @@
+system,workload,num_global_optima,global_optimum_perfs,total_basin_size,global_basin_ratio
+a_LLVM,LLVM,1,52285.4,63903,0.9750823974609375
+a_LLVM,LLVM_large,1,52324.8,22384,0.68310546875
+a_LLVM,LLVM_medium,1,53380.6,13452,0.821044921875
+a_LLVM,LLVM_small,1,53879.2,3022,0.9224664224664225

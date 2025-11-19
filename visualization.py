@@ -98,6 +98,7 @@ class Visualization:
                 # For other systems, lower performance is better (minimization)
                 global_opt_indices = np.where(performance == np.min(performance))[0]
 
+
             fig = plt.figure(figsize=(10, 7))
             ax = fig.add_subplot(111, projection='3d')
 
@@ -107,7 +108,7 @@ class Visualization:
 
             # Add color bar
             plt.subplots_adjust(right=0.85)
-            if self.system_name == 'h2':
+            if self.system_name in ['h2', 'a_redis']:
                 cbar = plt.colorbar(sc, ax=ax, shrink=0.6, aspect=10, pad=0.02)
                 cbar.set_label('Throughput', fontsize=18)
             else:
@@ -128,7 +129,7 @@ class Visualization:
             # ax.set_zlabel('Runtime', fontsize=16, labelpad=20)
             # plt.show()
             # Adjust view angle for better visibility
-            # ax.view_init(elev=25, azim=210)
+            ax.view_init(elev=35, azim=220)
 
             # Save figure
             file_path = os.path.join(self.paths["full_landscape"], f'{workload}_landscape.pdf')
@@ -145,10 +146,11 @@ class Visualization:
             performance = self.perf_dict[workload]
 
 
-            if self.system_name == 'h2':
+            if self.system_name in ['h2', 'a_redis']:
                 global_opt_indices = np.where(performance == np.max(performance))[0]  # Maximization
             else:
                 global_opt_indices = np.where(performance == np.min(performance))[0]  # Minimization
+                performance = -performance  # Invert performance for minimization problems
 
 
             x = config_2d[:, 0]
@@ -157,8 +159,8 @@ class Visualization:
 
             # insert data
             grid_x, grid_y = np.meshgrid(
-                np.linspace(x.min(), x.max(), 30),  # resolution
-                np.linspace(y.min(), y.max(), 30)
+                np.linspace(x.min(), x.max(), 20),  # resolution
+                np.linspace(y.min(), y.max(), 20)
             )
             grid_z = griddata((x, y), z, (grid_x, grid_y), method='cubic')  # nearest linear cubic
             # rbf_func = Rbf(x, y, z, function='cubic', smooth=0.3)
@@ -183,12 +185,12 @@ class Visualization:
             cbar = fig.colorbar(surf, ax=ax, shrink=0.6, aspect=10, pad=0.02)
             # cbar.set_label('Normalized Performance', fontsize=18)
 
-            if self.system_name == 'h2':
+            if self.system_name in ['h2', 'a_redis']:
 
-                cbar.set_label('Normalized Throughput', fontsize=26)
+                cbar.set_label('Normalized Throughput', fontsize=22)
             else:
 
-                cbar.set_label('Normalized Runtime', fontsize=26)
+                cbar.set_label('Normalized Negative Runtime', fontsize=22)
 
 
             # for global_opt_index in global_opt_indices:
@@ -196,10 +198,10 @@ class Visualization:
             #                color='black', marker='*', s=200, edgecolors='white', linewidths=1.5,
             #                label='Global Optimum' if global_opt_index == global_opt_indices[0] else "")
 
-            ax.set_xlabel('#D1', fontsize=26, labelpad=15)
-            ax.set_ylabel('#D2', fontsize=26, labelpad=15)
+            ax.set_xlabel('#D1', fontsize=22, labelpad=15)
+            ax.set_ylabel('#D2', fontsize=22, labelpad=15)
             # ax.set_zlabel('Normalized Performance', fontsize=16)
-
+            # plt.show()
             ax.view_init(elev=35, azim=220)
 
             file_path = os.path.join(self.paths["full_landscape"], f'{workload}_3D_normalized.pdf')
@@ -283,7 +285,7 @@ class Visualization:
         # Get the indices of local optimal configs
         local_optima_indices = local_optima_dict[workload]
 
-        if self.system_name == 'h2':
+        if self.system_name in ['h2', 'a_redis']:
             sorted_optima = sorted(local_optima_indices, key=lambda x: performance[x], reverse=True)
         else:
             sorted_optima = sorted(local_optima_indices, key=lambda x: performance[x])
@@ -299,7 +301,7 @@ class Visualization:
         # colors = cm.Spectral(norm_performances)
         sizes = 100 + norm_performances * 200  # Marker size based on performance
 
-        fig, ax = plt.subplots(figsize=(10, 8))
+        fig, ax = plt.subplots(figsize=(10, 7))
 
         # Plot each local optima with corresponding color and size
         scatter = ax.scatter(config_2d[sorted_optima, 0], config_2d[sorted_optima, 1],
@@ -308,14 +310,14 @@ class Visualization:
         # Add color bar to show the performance values
         if self.system_name == 'h2':
             cbar = plt.colorbar(scatter, ax=ax)
-            cbar.set_label('Throughput')
+            cbar.set_label('Throughput', fontsize=26)
         else:
             cbar = plt.colorbar(scatter, ax=ax)
-            cbar.set_label('Runtime')
+            cbar.set_label('Runtime', fontsize=26)
 
-        ax.set_xlabel('#D1')
-        ax.set_ylabel('#D2')
-        ax.set_title(f'Local Optima Distribution for W: ({workload}) of S: ({self.system_name})')
+        ax.set_xlabel('#D1', fontsize=26)
+        ax.set_ylabel('#D2', fontsize=26)
+        # ax.set_title(f'Local Optima Distribution for W: ({workload}) of S: ({self.system_name})')
         file_path = os.path.join(self.paths["local_optima"], f'{workload}_local_optima.pdf')
         plt.savefig(file_path, bbox_inches='tight', format='pdf')
         # plt.show()

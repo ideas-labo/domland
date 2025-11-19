@@ -6,13 +6,15 @@ from matplotlib import pyplot as plt
 from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics import pairwise_distances
 import seaborn as sns
-
+from scipy.sparse import issparse
 import pandas as pd
 from sklearn.manifold import MDS
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import json
 import random
 from utils import Utils
+from sklearn.neighbors import NearestNeighbors
+from typing import Optional
 
 
 class Landscape:
@@ -96,60 +98,149 @@ class Landscape:
         fdc_df.to_csv(output_file, index=False)
         print(f"The FDC results for {self.system_name} are saved to {output_file}")
 
+    # def calculate_local_optima(self):
+    #     """
+    #     Identify the local optimal configs for target system (with multiple workloads) based on adaptive hamming
+    #     distance.
+    #     """
+    #     local_optima_dict = {}
+    #     hamming_distance_dict = {}
+    #
+    #     for workload, config_data in self.config_dict.items():
+    #         configs = pd.DataFrame(config_data)
+    #         performances = self.perf_dict[workload]
+    #         config_dim = configs.shape[1]
+    #
+    #         # make sure the average neighbor of all the samples no smaller than dim/2 (target_neighbors).
+    #         target_neighbors = config_dim  # int(config_dim / 2)
+    #
+    #         # The maximum Hamming distance is dynamically adjusted so that it is not set too small, resulting in many
+    #         # individuals having no neighbors within this distance. In that case, increase Hamming Distance step size to
+    #         # find Neighbors. Therefore, the first thing is to determine the radius.
+    #         max_hamming_distance = 1
+    #         while True:
+    #             # Calculate Hamming distances (note: *config_dim is for obtaining the number of different bits)
+    #             hamming_distances = pairwise_distances(configs, metric='hamming') * config_dim
+    #             neighbors_mask = (hamming_distances > 0) & (hamming_distances <= max_hamming_distance)
+    #             neighbors_count = np.sum(neighbors_mask, axis=1)  # Calculate the No. of neighbors for each config
+    #             avg_neighbors = np.mean(neighbors_count)
+    #
+    #             # If the average No. of neighbors is greater than or equal to a predetermined value, the loop stops
+    #             if avg_neighbors >= target_neighbors:
+    #                 break
+    #             else:
+    #                 # Zoom in on finding neighbors' step lengths
+    #                 max_hamming_distance += 1
+    #
+    #         # Record used hamming distance for identifying neighbors
+    #         hamming_distance_dict[workload] = max_hamming_distance
+    #         local_optima_with_neighbors = []
+    #         isolated_local_optima = []
+    #
+    #         # Iterate through each configuration and check if it is local optima
+    #         for i in range(len(configs)):
+    #             neighbor_indices = np.where(neighbors_mask[i])[0]
+    #             if len(neighbor_indices) == 0:
+    #                 isolated_local_optima.append(i)
+    #             else:
+    #                 neighbor_performances = performances[neighbor_indices]
+    #                 if self.system_name == 'h2':
+    #                     if performances[i] >= max(neighbor_performances):
+    #                         local_optima_with_neighbors.append(i)
+    #                 else:
+    #                     if performances[i] <= min(neighbor_performances):
+    #                         local_optima_with_neighbors.append(i)
+    #
+    #         # Merging isolated local optima and local optima with neighbors
+    #         all_local_optima_indices = local_optima_with_neighbors + isolated_local_optima
+    #         local_optima_dict[workload] = all_local_optima_indices
+    #
+    #     return local_optima_dict, hamming_distance_dict
+
     def calculate_local_optima(self):
         """
-        Identify the local optimal configs for target system (with multiple workloads) based on adaptive hamming
-        distance.
+        Identify local optima for each workload using a memory-friendly
+        radius neighbors graph under Hamming distance.
+        - 不再构造 NxN 稠密矩阵，改用稀疏邻接图
+        - 动态增大汉明半径，直到平均邻居数 >= target_neighbors
         """
         local_optima_dict = {}
         hamming_distance_dict = {}
 
         for workload, config_data in self.config_dict.items():
-            configs = pd.DataFrame(config_data)
-            performances = self.perf_dict[workload]
-            config_dim = configs.shape[1]
 
-            # make sure the average neighbor of all the samples no smaller than dim/2 (target_neighbors).
-            target_neighbors = config_dim  # int(config_dim / 2)
+            configs_df = pd.DataFrame(config_data).copy()
+            performances = np.asarray(self.perf_dict[workload])
+            config_dim = configs_df.shape[1]
 
-            # The maximum Hamming distance is dynamically adjusted so that it is not set too small, resulting in many
-            # individuals having no neighbors within this distance. In that case, increase Hamming Distance step size to
-            # find Neighbors. Therefore, the first thing is to determine the radius.
+            # encode categorical/string columns to category codes
+            for c in configs_df.columns:
+                if not (pd.api.types.is_integer_dtype(configs_df[c]) or
+                        pd.api.types.is_bool_dtype(configs_df[c]) or
+                        pd.api.types.is_float_dtype(configs_df[c])):
+                    configs_df[c] = pd.Categorical(configs_df[c]).codes
+
+            X = configs_df.to_numpy()
+            n = X.shape[0]
+
+            # targeted average neighbor count
+            target_neighbors = config_dim
+
+            # dynamically adjust max_hamming_distance to ensure average neighbors >= target_neighbors
             max_hamming_distance = 1
-            while True:
-                # Calculate Hamming distances (note: *config_dim is for obtaining the number of different bits)
-                hamming_distances = pairwise_distances(configs, metric='hamming') * config_dim
-                neighbors_mask = (hamming_distances > 0) & (hamming_distances <= max_hamming_distance)
-                neighbors_count = np.sum(neighbors_mask, axis=1)  # Calculate the No. of neighbors for each config
-                avg_neighbors = np.mean(neighbors_count)
+            avg_neighbors = 0.0
+            # use 'brute' + metric='hamming' to build radius neighbors, return sparse graph (without self-loop)
+            nn = NearestNeighbors(metric='hamming', algorithm='brute')
+            nn.fit(X)
 
-                # If the average No. of neighbors is greater than or equal to a predetermined value, the loop stops
+            while max_hamming_distance <= config_dim:
+                radius = max_hamming_distance / config_dim  # hamming distance ratio
+                try:
+                    # new version of sklearn, support include_self
+                    graph = nn.radius_neighbors_graph(
+                        X, radius=radius, mode='connectivity', include_self=False
+                    )
+                except TypeError:
+                    # old version of sklearn, not support include_self
+                    graph = nn.radius_neighbors_graph(
+                        X, radius=radius, mode='connectivity'
+                    )
+                    if issparse(graph):
+                        graph.setdiag(0)
+                        graph.eliminate_zeros()
+
+                avg_neighbors = graph.nnz / X.shape[0]
                 if avg_neighbors >= target_neighbors:
                     break
-                else:
-                    # Zoom in on finding neighbors' step lengths
-                    max_hamming_distance += 1
+                max_hamming_distance += 1
 
-            # Record used hamming distance for identifying neighbors
+            # if exceeded config_dim, set to config_dim
             hamming_distance_dict[workload] = max_hamming_distance
+
+            # judge local optima based on sparse adjacency
+            indptr = graph.indptr
+            indices = graph.indices
+
             local_optima_with_neighbors = []
             isolated_local_optima = []
 
-            # Iterate through each configuration and check if it is local optima
-            for i in range(len(configs)):
-                neighbor_indices = np.where(neighbors_mask[i])[0]
-                if len(neighbor_indices) == 0:
-                    isolated_local_optima.append(i)
-                else:
-                    neighbor_performances = performances[neighbor_indices]
-                    if self.system_name == 'h2':
-                        if performances[i] >= max(neighbor_performances):
-                            local_optima_with_neighbors.append(i)
-                    else:
-                        if performances[i] <= min(neighbor_performances):
-                            local_optima_with_neighbors.append(i)
+            minimize = (self.system_name != 'h2')  # h2 is maximization problem
 
-            # Merging isolated local optima and local optima with neighbors
+            for i in range(n):
+                start, end = indptr[i], indptr[i + 1]
+                neigh_idx = indices[start:end]
+                if neigh_idx.size == 0:
+                    isolated_local_optima.append(i)
+                    continue
+
+                neigh_perf = performances[neigh_idx]
+                if minimize:
+                    if performances[i] <= np.min(neigh_perf):
+                        local_optima_with_neighbors.append(i)
+                else:
+                    if performances[i] >= np.max(neigh_perf):
+                        local_optima_with_neighbors.append(i)
+
             all_local_optima_indices = local_optima_with_neighbors + isolated_local_optima
             local_optima_dict[workload] = all_local_optima_indices
 
@@ -229,80 +320,217 @@ class Landscape:
 
         return quality_dict
 
+    # def calculate_basin(self, local_optima_dict, hamming_distance_dict):
+    #     """
+    #     Calculate the Basin of Attraction for each local optima
+    #     :param local_optima_dict: the dict for which saves the index of local optima
+    #     :param hamming_distance_dict: Radius for identify neighbors
+    #     :return: Basin of Attraction, the size of basin for each local optima
+    #     """
+    #     basin_dict = {}  # store the size of basin(of attraction) for each local optima
+    #     neutral_dict = {}  # store the ratio of neutral points
+    #
+    #     for workload, config_data in self.config_dict.items():
+    #         configs = pd.DataFrame(config_data)
+    #         performances = self.perf_dict[workload]
+    #         local_optima_indices = local_optima_dict[workload]
+    #         max_hamming_distance = hamming_distance_dict[workload]
+    #
+    #         # initial basin list for each local optima
+    #         basin_dict[workload] = {optima_index: [] for optima_index in local_optima_indices}
+    #         neutral_list = []
+    #
+    #         hamming_distances = pairwise_distances(configs, metric='hamming') * configs.shape[1]
+    #
+    #         # iterating each non-local optima
+    #         for i in range(len(configs)):
+    #             if i not in local_optima_indices:
+    #                 current_index = i
+    #
+    #                 while True:
+    #                     # retrieve the neighbors of current configuration
+    #                     neighbors_mask = (hamming_distances[current_index] > 0) & \
+    #                                      (hamming_distances[current_index] <= max_hamming_distance)
+    #                     neighbor_indices = np.where(neighbors_mask)[0]
+    #
+    #                     # all the neighbors' perf are the same as current config -> getting trap to neutrality
+    #                     if np.all(performances[neighbor_indices] == performances[current_index]):
+    #                         neutral_list.append(i)
+    #                         break
+    #
+    #                     # Check whether local optima exists in neighbors
+    #                     local_optima_neighbors = [idx for idx in neighbor_indices if idx in local_optima_indices]
+    #                     if local_optima_neighbors:
+    #                         # if there are multiple local optimal configs, select the best one.
+    #                         if self.system_name == 'h2':
+    #                             best_optima = max(local_optima_neighbors, key=lambda idx: performances[idx])
+    #                         else:
+    #                             best_optima = min(local_optima_neighbors, key=lambda idx: performances[idx])
+    #
+    #                         # record the start point into the basin of the best local optima
+    #                         basin_dict[workload][best_optima].append(i)
+    #                         break
+    #                     else:
+    #                         # if there isn't local optima exist, jump to the best neighbor
+    #                         best_neighbor = neighbor_indices[
+    #                             np.argmax(performances[neighbor_indices])] if self.system_name == 'h2' \
+    #                             else neighbor_indices[np.argmin(performances[neighbor_indices])]
+    #
+    #                         # update current point
+    #                         current_index = best_neighbor
+    #
+    #         # calculate the ratio of neural points.
+    #         neutral_dict[workload] = len(neutral_list) / len(configs)
+    #
+    #     # calculate the size of basin for each local optima
+    #     basin_size_dict = {workload: {optima_index: len(basin) for optima_index, basin in basin_info.items()}
+    #                        for workload, basin_info in basin_dict.items()}
+    #
+    #     # Write to JSON file for next retrieving
+    #     output_file = os.path.join(self.paths["landscape_metrics_BoA"], f'{self.system_name}_basin_data.json')
+    #
+    #     with open(output_file, 'w') as f:
+    #         json.dump(basin_size_dict, f, indent=4)
+    #     print(f"Basin data saved to {output_file}")
+    #
+    #     return basin_size_dict
+
     def calculate_basin(self, local_optima_dict, hamming_distance_dict):
         """
-        Calculate the Basin of Attraction for each local optima
-        :param local_optima_dict: the dict for which saves the index of local optima
-        :param hamming_distance_dict: Radius for identify neighbors
-        :return: Basin of Attraction, the size of basin for each local optima
+        计算每个局部最优的吸引域大小（Basin of Attraction）
+        - 基于汉明半径邻域的稀疏邻接图（避免 OOM）
+        - 对每个非局部最优点，按邻域性能做逐步“爬/下山”，直到吸附到某个局部最优；若陷入平坦/无邻居/环，则记为中性点
+        返回：basin_size_dict（每个局部最优的盆地大小），并写入 JSON
         """
-        basin_dict = {}  # store the size of basin(of attraction) for each local optima
-        neutral_dict = {}  # store the ratio of neutral points
+        basin_dict = {}  # {workload: {opt_idx: [起点i, ...]}}
+        neutral_dict = {}  # {workload: ratio_of_neutral}
 
         for workload, config_data in self.config_dict.items():
-            configs = pd.DataFrame(config_data)
-            performances = self.perf_dict[workload]
-            local_optima_indices = local_optima_dict[workload]
-            max_hamming_distance = hamming_distance_dict[workload]
+            # --- 1) 数据准备：与 calculate_local_optima 一致 ---
+            configs_df = pd.DataFrame(config_data).copy()
+            performances = np.asarray(self.perf_dict[workload])
+            dim = configs_df.shape[1]
 
-            # initial basin list for each local optima
-            basin_dict[workload] = {optima_index: [] for optima_index in local_optima_indices}
+            # 分类/字符串 -> category codes（保证汉明比较“相等/不等”）
+            for c in configs_df.columns:
+                if not (pd.api.types.is_integer_dtype(configs_df[c]) or
+                        pd.api.types.is_bool_dtype(configs_df[c]) or
+                        pd.api.types.is_float_dtype(configs_df[c])):
+                    configs_df[c] = pd.Categorical(configs_df[c]).codes
+
+            X = configs_df.to_numpy()
+            n = X.shape[0]
+
+            local_optima_indices = set(local_optima_dict[workload])
+            max_hamming_distance = int(hamming_distance_dict[workload])
+            # 半径是“比例”：d / dim
+            radius = max(1, max_hamming_distance) / dim
+
+            # --- 2) 构建半径邻居稀疏图（不包含自环） ---
+            nn = NearestNeighbors(metric='hamming', algorithm='brute')
+            nn.fit(X)
+            try:
+                graph = nn.radius_neighbors_graph(
+                    X, radius=radius, mode='connectivity', include_self=False
+                )
+            except TypeError:
+                graph = nn.radius_neighbors_graph(
+                    X, radius=radius, mode='connectivity'
+                )
+                if issparse(graph):
+                    graph.setdiag(0)
+                    graph.eliminate_zeros()
+
+            indptr = graph.indptr
+            indices = graph.indices
+
+            # --- 3) 初始化盆地容器 ---
+            basin_dict[workload] = {opt_idx: [] for opt_idx in local_optima_indices}
             neutral_list = []
 
-            hamming_distances = pairwise_distances(configs, metric='hamming') * configs.shape[1]
+            minimize = (self.system_name != 'h2')
 
-            # iterating each non-local optima
-            for i in range(len(configs)):
-                if i not in local_optima_indices:
-                    current_index = i
+            # --- 4) 对每个“非局部最优”点，沿邻域做爬/下山搜索 ---
+            for i in range(n):
+                if i in local_optima_indices:
+                    continue
 
-                    while True:
-                        # retrieve the neighbors of current configuration
-                        neighbors_mask = (hamming_distances[current_index] > 0) & \
-                                         (hamming_distances[current_index] <= max_hamming_distance)
-                        neighbor_indices = np.where(neighbors_mask)[0]
+                current = i
+                visited = set([current])
+                max_steps = dim * 4  # 保护上限，防止极端环/平台导致的长链
 
-                        # all the neighbors' perf are the same as current config -> getting trap to neutrality
-                        if np.all(performances[neighbor_indices] == performances[current_index]):
+                while True:
+                    start, end = indptr[current], indptr[current + 1]
+                    neigh_idx = indices[start:end]
+
+                    # 无邻居：视为中性点（采样稀疏或极端情况）
+                    if neigh_idx.size == 0:
+                        neutral_list.append(i)
+                        break
+
+                    neigh_perf = performances[neigh_idx]
+                    curr_perf = performances[current]
+
+                    # 全部邻居性能与当前相同：平坦平台 -> 中性点
+                    if np.all(neigh_perf == curr_perf):
+                        neutral_list.append(i)
+                        break
+
+                    # 邻居中的局部最优
+                    neigh_lopt = [idx for idx in neigh_idx if idx in local_optima_indices]
+                    if neigh_lopt:
+                        # 选择最佳局部最优
+                        if minimize:
+                            best_opt = min(neigh_lopt, key=lambda idx: performances[idx])
+                        else:
+                            best_opt = max(neigh_lopt, key=lambda idx: performances[idx])
+                        basin_dict[workload][best_opt].append(i)
+                        break
+
+                    # 否则朝“更优邻居”移动
+                    if minimize:
+                        best_neighbor = neigh_idx[np.argmin(neigh_perf)]
+                        # 若最优邻居不更优（数值相等且不在局部最优集合），可能出现环/停滞 → 中性
+                        if performances[best_neighbor] >= curr_perf:
+                            neutral_list.append(i)
+                            break
+                    else:
+                        best_neighbor = neigh_idx[np.argmax(neigh_perf)]
+                        if performances[best_neighbor] <= curr_perf:
                             neutral_list.append(i)
                             break
 
-                        # Check whether local optima exists in neighbors
-                        local_optima_neighbors = [idx for idx in neighbor_indices if idx in local_optima_indices]
-                        if local_optima_neighbors:
-                            # if there are multiple local optimal configs, select the best one.
-                            if self.system_name == 'h2':
-                                best_optima = max(local_optima_neighbors, key=lambda idx: performances[idx])
-                            else:
-                                best_optima = min(local_optima_neighbors, key=lambda idx: performances[idx])
+                    # 防环：走到走过的点，判为中性
+                    if best_neighbor in visited:
+                        neutral_list.append(i)
+                        break
 
-                            # record the start point into the basin of the best local optima
-                            basin_dict[workload][best_optima].append(i)
-                            break
-                        else:
-                            # if there isn't local optima exist, jump to the best neighbor
-                            best_neighbor = neighbor_indices[
-                                np.argmax(performances[neighbor_indices])] if self.system_name == 'h2' \
-                                else neighbor_indices[np.argmin(performances[neighbor_indices])]
+                    visited.add(best_neighbor)
+                    current = best_neighbor
 
-                            # update current point
-                            current_index = best_neighbor
+                    max_steps -= 1
+                    if max_steps <= 0:
+                        # 极端保护：步数过长也归为中性
+                        neutral_list.append(i)
+                        break
 
-            # calculate the ratio of neural points.
-            neutral_dict[workload] = len(neutral_list) / len(configs)
+            # 中性点占比
+            neutral_dict[workload] = len(neutral_list) / n
 
-        # calculate the size of basin for each local optima
-        basin_size_dict = {workload: {optima_index: len(basin) for optima_index, basin in basin_info.items()}
-                           for workload, basin_info in basin_dict.items()}
+        # --- 5) 统计盆地大小并落盘 ---
+        basin_size_dict = {
+            workload: {opt_idx: len(starts) for opt_idx, starts in basin_info.items()}
+            for workload, basin_info in basin_dict.items()
+        }
 
-        # Write to JSON file for next retrieving
         output_file = os.path.join(self.paths["landscape_metrics_BoA"], f'{self.system_name}_basin_data.json')
-
+        os.makedirs(self.paths["landscape_metrics_BoA"], exist_ok=True)
         with open(output_file, 'w') as f:
             json.dump(basin_size_dict, f, indent=4)
         print(f"Basin data saved to {output_file}")
 
         return basin_size_dict
+
 
     def save_local_structure(self, local_optima_dict, basin_size_dict, quality_dict, hamming_distance_dict):
         """
@@ -400,17 +628,92 @@ class Landscape:
 
         return basin_size_dict
 
+    # @staticmethod
+    # def compute_hamming_distances(config_data):
+    #     """
+    #     Computes the Hamming distances between all configurations.
+    #     :param config_data:
+    #     :return:
+    #     """
+    #     configs = pd.DataFrame(config_data)
+    #     config_dim = configs.shape[1]
+    #     hamming_distances = pairwise_distances(configs, metric='hamming') * config_dim
+    #     return hamming_distances
+
+
     @staticmethod
-    def compute_hamming_distances(config_data):
+    def compute_hamming_distances(config_data,
+                                  out_path: Optional[str] = None,
+                                  block_rows: int = 4096,
+                                  dtype=np.uint16):
         """
-        Computes the Hamming distances between all configurations.
-        :param config_data:
-        :return:
+        计算所有配置之间的“汉明计数”距离（等价于 pairwise_distances(..., metric='hamming') * D）。
+        - 对非数值/分类列做 category 编码，保证“相等/不等”的语义；
+        - 用分块计算避免内存爆炸；
+        - 如果提供 out_path，则返回一个 NxN 的 memmap（磁盘映射数组）；否则返回常规 NumPy 数组。
+
+        参数
+        ----
+        config_data : DataFrame 或 可转为 DataFrame 的对象
+        out_path    : 如果给出路径，将结果写为 memmap（推荐大数据使用）；否则返回内存数组
+        block_rows  : 行分块大小，按你的内存调小/调大（越大越快、越占内存）
+        dtype       : 距离矩阵存储类型。汉明计数 ∈ [0, D]，通常用 uint16 足够；D>65535 时改用 uint32。
+
+        返回
+        ----
+        dist : np.ndarray (N, N) 或 np.memmap (N, N)，元素为“汉明计数”（整数）
         """
-        configs = pd.DataFrame(config_data)
-        config_dim = configs.shape[1]
-        hamming_distances = pairwise_distances(configs, metric='hamming') * config_dim
-        return hamming_distances
+        # --- 1) 编码：把非整型/布尔/浮点列编码成类别整数（配置一般是离散的） ---
+        df = pd.DataFrame(config_data).copy()
+        for c in df.columns:
+            if not (pd.api.types.is_integer_dtype(df[c]) or
+                    pd.api.types.is_bool_dtype(df[c]) or
+                    pd.api.types.is_float_dtype(df[c])):
+                df[c] = pd.Categorical(df[c]).codes
+        X = df.to_numpy()
+        N, D = X.shape
+
+        # 自动选择 dtype（防止维度太大溢出）
+        if dtype is None:
+            dtype = np.uint16 if D <= np.iinfo(np.uint16).max else np.uint32
+
+        # --- 2) 准备输出矩阵（内存或 memmap） ---
+        if out_path:
+            dist = np.memmap(out_path, mode='w+', dtype=dtype, shape=(N, N))
+        else:
+            dist = np.empty((N, N), dtype=dtype)
+
+        # 对角为 0（自身距离为 0）
+        np.fill_diagonal(dist, 0)
+
+        # --- 3) 分块计算上三角（并镜像到下三角） ---
+        # 公式：Ham(A_i, B_j) = sum_k [X[i,k] != X[j,k]]
+        # 用分块避免一次性构造 (R, C, D) 过大张量
+        for r0 in range(0, N, block_rows):
+            r1 = min(r0 + block_rows, N)
+            A = X[r0:r1]  # (R, D)
+
+            # 只算上三角（c0 从 r0 开始）
+            for c0 in range(r0, N, block_rows):
+                c1 = min(c0 + block_rows, N)
+                B = X[c0:c1]  # (C, D)
+
+                # 广播比较：A[:, None, :] vs B[None, :, :]
+                # (R, 1, D) != (1, C, D) -> (R, C, D) -> sum over D -> (R, C)
+                # 这一块在内存受控（~ R*C*D*1byte），由 block_rows 控制
+                neq = (A[:, None, :] != B[None, :, :])
+                block = neq.sum(axis=2)
+
+                # 写入上三角
+                dist[r0:r1, c0:c1] = block.astype(dtype, copy=False)
+                # 镜像到下三角（避免再算一次）
+                if r0 != c0:
+                    dist[c0:c1, r0:r1] = block.T.astype(dtype, copy=False)
+
+        # memmap 需要 flush；普通 ndarray 忽略即可
+        if out_path:
+            dist.flush()
+        return dist
 
     @staticmethod
     def traverse_landscape(hamming_distances, config_data):
