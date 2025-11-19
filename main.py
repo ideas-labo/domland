@@ -5,8 +5,8 @@ from utils import Utils
 
 
 def main():
-    # system_names = ['batik', 'dconvert', 'h2', 'jump3r', 'kanzi', 'lrzip', 'x264', 'xz', 'z3']
-    system_names = ['a_Apache']
+    system_names = ['batik', 'dconvert', 'h2', 'jump3r', 'kanzi', 'lrzip', 'x264', 'xz', 'z3']
+    # system_names = ['a_Apache']
     # system_names = ['batik']
 
     for system_name in system_names:

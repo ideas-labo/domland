@@ -161,8 +161,8 @@ class Landscape:
         """
         Identify local optima for each workload using a memory-friendly
         radius neighbors graph under Hamming distance.
-        - 不再构造 NxN 稠密矩阵，改用稀疏邻接图
-        - 动态增大汉明半径，直到平均邻居数 >= target_neighbors
+        - use spase adjacency graph to represent neighborhood relationships
+        - dynamically adjust radius (Hamming distance) to ensure average neighbors >= target_neighbors
         """
         local_optima_dict = {}
         hamming_distance_dict = {}
@@ -397,21 +397,22 @@ class Landscape:
 
     def calculate_basin(self, local_optima_dict, hamming_distance_dict):
         """
-        计算每个局部最优的吸引域大小（Basin of Attraction）
-        - 基于汉明半径邻域的稀疏邻接图（避免 OOM）
-        - 对每个非局部最优点，按邻域性能做逐步“爬/下山”，直到吸附到某个局部最优；若陷入平坦/无邻居/环，则记为中性点
-        返回：basin_size_dict（每个局部最优的盆地大小），并写入 JSON
+        calculate basin of attraction for each local optima using sparse radius neighbors graph
+        - based on hamming radius neighborhood (to avoid OOM)
+        - for each non-local-optimal point, do iterative "hill climbing/descending" based on neighborhood performance
+        - until it is absorbed to some local optimum; if trapped in flat/no neighbor/loop, mark as neutral point
+        return: basin_size_dict, write into JSON
         """
-        basin_dict = {}  # {workload: {opt_idx: [起点i, ...]}}
+        basin_dict = {}  # {workload: {opt_idx: [start point i, ...]}}
         neutral_dict = {}  # {workload: ratio_of_neutral}
 
         for workload, config_data in self.config_dict.items():
-            # --- 1) 数据准备：与 calculate_local_optima 一致 ---
+            # 1) data preparation
             configs_df = pd.DataFrame(config_data).copy()
             performances = np.asarray(self.perf_dict[workload])
             dim = configs_df.shape[1]
 
-            # 分类/字符串 -> category codes（保证汉明比较“相等/不等”）
+            # convert categorical/string columns to category codes
             for c in configs_df.columns:
                 if not (pd.api.types.is_integer_dtype(configs_df[c]) or
                         pd.api.types.is_bool_dtype(configs_df[c]) or
@@ -423,10 +424,10 @@ class Landscape:
 
             local_optima_indices = set(local_optima_dict[workload])
             max_hamming_distance = int(hamming_distance_dict[workload])
-            # 半径是“比例”：d / dim
+            # radius is in "ratio" form: d / dim
             radius = max(1, max_hamming_distance) / dim
 
-            # --- 2) 构建半径邻居稀疏图（不包含自环） ---
+            # 2) construct radius neighbors sparse graph (without self-loop)
             nn = NearestNeighbors(metric='hamming', algorithm='brute')
             nn.fit(X)
             try:
@@ -444,26 +445,26 @@ class Landscape:
             indptr = graph.indptr
             indices = graph.indices
 
-            # --- 3) 初始化盆地容器 ---
+            # 3) initialize basin dict
             basin_dict[workload] = {opt_idx: [] for opt_idx in local_optima_indices}
             neutral_list = []
 
             minimize = (self.system_name != 'h2')
 
-            # --- 4) 对每个“非局部最优”点，沿邻域做爬/下山搜索 ---
+            # 4) for each non-local-optimal point, do climbing/descending search in neighborhood ---
             for i in range(n):
                 if i in local_optima_indices:
                     continue
 
                 current = i
                 visited = set([current])
-                max_steps = dim * 4  # 保护上限，防止极端环/平台导致的长链
+                max_steps = dim * 4
 
                 while True:
                     start, end = indptr[current], indptr[current + 1]
                     neigh_idx = indices[start:end]
 
-                    # 无邻居：视为中性点（采样稀疏或极端情况）
+                    # without neighbors, considered neutral point (sparse sampling or extreme case)
                     if neigh_idx.size == 0:
                         neutral_list.append(i)
                         break
@@ -471,15 +472,15 @@ class Landscape:
                     neigh_perf = performances[neigh_idx]
                     curr_perf = performances[current]
 
-                    # 全部邻居性能与当前相同：平坦平台 -> 中性点
+                    # if all neighbors have same performance as current -> neutral point
                     if np.all(neigh_perf == curr_perf):
                         neutral_list.append(i)
                         break
 
-                    # 邻居中的局部最优
+                    # local optima exists in neighbors → absorbed
                     neigh_lopt = [idx for idx in neigh_idx if idx in local_optima_indices]
                     if neigh_lopt:
-                        # 选择最佳局部最优
+                        # select best local optimum among neighbors
                         if minimize:
                             best_opt = min(neigh_lopt, key=lambda idx: performances[idx])
                         else:
@@ -487,10 +488,10 @@ class Landscape:
                         basin_dict[workload][best_opt].append(i)
                         break
 
-                    # 否则朝“更优邻居”移动
+                    # otherwise, move to "better neighbor"
                     if minimize:
                         best_neighbor = neigh_idx[np.argmin(neigh_perf)]
-                        # 若最优邻居不更优（数值相等且不在局部最优集合），可能出现环/停滞 → 中性
+                        # if the best neighbor is not better (equal performance and not local optima) → neutral
                         if performances[best_neighbor] >= curr_perf:
                             neutral_list.append(i)
                             break
@@ -500,7 +501,6 @@ class Landscape:
                             neutral_list.append(i)
                             break
 
-                    # 防环：走到走过的点，判为中性
                     if best_neighbor in visited:
                         neutral_list.append(i)
                         break
@@ -510,14 +510,12 @@ class Landscape:
 
                     max_steps -= 1
                     if max_steps <= 0:
-                        # 极端保护：步数过长也归为中性
                         neutral_list.append(i)
                         break
 
-            # 中性点占比
             neutral_dict[workload] = len(neutral_list) / n
 
-        # --- 5) 统计盆地大小并落盘 ---
+        # 5) calculate basin size for each local optima
         basin_size_dict = {
             workload: {opt_idx: len(starts) for opt_idx, starts in basin_info.items()}
             for workload, basin_info in basin_dict.items()
@@ -647,23 +645,23 @@ class Landscape:
                                   block_rows: int = 4096,
                                   dtype=np.uint16):
         """
-        计算所有配置之间的“汉明计数”距离（等价于 pairwise_distances(..., metric='hamming') * D）。
-        - 对非数值/分类列做 category 编码，保证“相等/不等”的语义；
-        - 用分块计算避免内存爆炸；
-        - 如果提供 out_path，则返回一个 NxN 的 memmap（磁盘映射数组）；否则返回常规 NumPy 数组。
+        calculate hamming distances between all configurations
+        - for non-numeric/categorical columns, do category encoding to ensure "equal/not equal" semantics;
+        - calculate in blocks to save memory;
+        - if out_path is given, write to memmap (recommended for large data); else return in-memory array.
 
-        参数
+        Parameter
         ----
-        config_data : DataFrame 或 可转为 DataFrame 的对象
-        out_path    : 如果给出路径，将结果写为 memmap（推荐大数据使用）；否则返回内存数组
-        block_rows  : 行分块大小，按你的内存调小/调大（越大越快、越占内存）
-        dtype       : 距离矩阵存储类型。汉明计数 ∈ [0, D]，通常用 uint16 足够；D>65535 时改用 uint32。
+        config_data : DataFrame
+        out_path    : if out_path is given, write the result to memmap (recommended for large data);
+        block_rows  : size of row block for computation. Each block computes a (R, C) sub-matrix of distances.
+        dtype       :
 
-        返回
+        return
         ----
-        dist : np.ndarray (N, N) 或 np.memmap (N, N)，元素为“汉明计数”（整数）
+        dist : np.ndarray (N, N) or np.memmap (N, N)，elements are integer Hamming distances
         """
-        # --- 1) 编码：把非整型/布尔/浮点列编码成类别整数（配置一般是离散的） ---
+        # 1) encode config data to numeric array
         df = pd.DataFrame(config_data).copy()
         for c in df.columns:
             if not (pd.api.types.is_integer_dtype(df[c]) or
@@ -673,44 +671,38 @@ class Landscape:
         X = df.to_numpy()
         N, D = X.shape
 
-        # 自动选择 dtype（防止维度太大溢出）
+        # select appropriate dtype if not given
         if dtype is None:
             dtype = np.uint16 if D <= np.iinfo(np.uint16).max else np.uint32
 
-        # --- 2) 准备输出矩阵（内存或 memmap） ---
+        # 2) prepare output matrix (in-memory or memmap)
+
         if out_path:
             dist = np.memmap(out_path, mode='w+', dtype=dtype, shape=(N, N))
         else:
             dist = np.empty((N, N), dtype=dtype)
 
-        # 对角为 0（自身距离为 0）
         np.fill_diagonal(dist, 0)
 
-        # --- 3) 分块计算上三角（并镜像到下三角） ---
-        # 公式：Ham(A_i, B_j) = sum_k [X[i,k] != X[j,k]]
-        # 用分块避免一次性构造 (R, C, D) 过大张量
+        # 3) compute hamming distances in blocks, upper triangle only, mirror to lower triangle
+        # equation：Ham(A_i, B_j) = sum_k [X[i,k] != X[j,k]]
+        # use blocks to control memory usage
         for r0 in range(0, N, block_rows):
             r1 = min(r0 + block_rows, N)
             A = X[r0:r1]  # (R, D)
 
-            # 只算上三角（c0 从 r0 开始）
             for c0 in range(r0, N, block_rows):
                 c1 = min(c0 + block_rows, N)
                 B = X[c0:c1]  # (C, D)
 
-                # 广播比较：A[:, None, :] vs B[None, :, :]
-                # (R, 1, D) != (1, C, D) -> (R, C, D) -> sum over D -> (R, C)
-                # 这一块在内存受控（~ R*C*D*1byte），由 block_rows 控制
                 neq = (A[:, None, :] != B[None, :, :])
                 block = neq.sum(axis=2)
 
-                # 写入上三角
                 dist[r0:r1, c0:c1] = block.astype(dtype, copy=False)
-                # 镜像到下三角（避免再算一次）
+
                 if r0 != c0:
                     dist[c0:c1, r0:r1] = block.T.astype(dtype, copy=False)
 
-        # memmap 需要 flush；普通 ndarray 忽略即可
         if out_path:
             dist.flush()
         return dist
